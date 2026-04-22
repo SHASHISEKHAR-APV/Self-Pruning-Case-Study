@@ -10,7 +10,6 @@
 #   pruned_weight = original_weight × sigmoid(gate_score)
 #   If gate_score → -∞, sigmoid → 0, so that weight is zeroed out (pruned).
 #   If gate_score is large positive, sigmoid → 1, so weight is kept fully.
-# =============================================================================
 
 import torch
 import torch.nn as nn
@@ -22,18 +21,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-# ─────────────────────────────────────────────
-# 0. Device Setup
-# ─────────────────────────────────────────────
-# Use GPU if available; otherwise fall back to CPU.
-# All tensors and the model will be moved to this device.
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f"[INFO] Using device: {device}")
 
 
-# =============================================================================
-# 1. PrunableLinear — Custom Layer with Learnable Gates
-# =============================================================================
+
 class PrunableLinear(nn.Module):
     """
     A drop-in replacement for nn.Linear that adds a learnable gate for every
@@ -52,8 +45,7 @@ class PrunableLinear(nn.Module):
         self.out_features = out_features
 
         # ── Standard weight matrix ──────────────────────────────────────────
-        # Shape: (out_features, in_features) — same as nn.Linear internals.
-        # Initialized with Kaiming uniform (a good default for ReLU networks).
+        
         self.weight = nn.Parameter(
             torch.empty(out_features, in_features)
         )
@@ -64,10 +56,7 @@ class PrunableLinear(nn.Module):
         self.bias = nn.Parameter(torch.zeros(out_features))
 
         # ── Gate scores ──────────────────────────────────────────────────────
-        # Same shape as weight. Initialized to 1.0 so that:
-        #   sigmoid(1.0) ≈ 0.731 — gates start "mostly open"
-        # This gives the optimizer room to push them toward 0 (prune) or
-        # keep them near 1 (retain the weight).
+       
         self.gate_scores = nn.Parameter(
             torch.ones(out_features, in_features)
         )
