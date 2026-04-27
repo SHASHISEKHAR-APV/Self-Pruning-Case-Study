@@ -3,11 +3,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class PrunableLinear(nn.Module):
-    """
-    A drop-in replacement for nn.Linear that adds a learnable gate for every
-    weight. During the forward pass, each weight is multiplied by the sigmoid
-    of its corresponding gate score before the linear transformation.
-    """
     def __init__(self, in_features, out_features):
         super(PrunableLinear, self).__init__()
         self.in_features = in_features
