@@ -12,6 +12,9 @@ def train_one_run(lambda_sparse, train_loader, test_loader, num_epochs=5, lr=1e-
     print(f"\n[INFO] Training with lambda_sparse = {lambda_sparse}")
     
     model = PrunableNet().to(device)
+
+    # gate_params = []
+    #base_params = []
     
     gate_params = []
     base_params = []
