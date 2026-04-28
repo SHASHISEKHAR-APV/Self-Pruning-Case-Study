@@ -21,7 +21,7 @@ def train_one_run(lambda_sparse, train_loader, test_loader, num_epochs=5, lr=1e-
     for name, param in model.named_parameters():
         if 'gate_scores' in name:
             gate_params.append(param)
-        else:
+        elif:
             base_params.append(param)
             
     optimizer = torch.optim.Adam([
